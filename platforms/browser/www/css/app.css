@@ -1,0 +1,17 @@
+/* Your app styles here */
+.btn_newTask{
+
+margin-left: 10px;
+
+	}
+.loading{
+	max-width: 50px;
+}
+#taskSettings{display: none;}
+.settingsLInk{
+	
+    text-align: left;
+    font-size: 11px;
+}
+.taskNotFound{list-style: none;}
+.searchbar-no-found{display: none;}
