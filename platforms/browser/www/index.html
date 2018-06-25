@@ -306,27 +306,28 @@
   <!-- Dynamic Routing Page Template -->
   <template id="page-dynamic-routing">
     <f7-page>
-      <f7-navbar title="{{elementSel.title}}" back-link="Back" id="actualTasknav"><f7-link @click="deleteTask()" class="button" back-link="Back">Delete</f7-link></f7-navbar>
-      <f7-block strong>
-        <ul>
-          <li><b>Url:</b> {{$f7route.url}}</li>
-          <li><b>Path:</b> {{$f7route.path}}</li>
-          <li><b>Hash:</b> {{$f7route.hash}}</li>
-          <li><b>Params:</b>
-            <ul>
-              <li v-for="(value, key) in $f7route.params" :key="key"><b>{{key}}:</b> {{value}}</li>
-            </ul>
-          </li>
-          <li><b>Query:</b>
-            <ul>
-              <li v-for="(value, key) in $f7route.query" :key="key"><b>{{key}}:</b> {{value}}</li>
-            </ul>
-          </li>
-          <li><b>Route:</b> {{$f7route.route}}</li>
-        </ul>
+      <f7-navbar title="{{elementSel.title}}" back-link="Back" id="actualTasknav"><f7-link @click="deleteTask()"  class="button" back-link="Back">Delete</f7-link></f7-navbar>
+       <f7-link   class="button tip" >Save</f7-link>
+        <f7-block strong class="taskCont">
+                  <f7-list>
+            <f7-list-item>    
+              <f7-label>Name</f7-label>
+              <f7-input name="taskName" placeholder="Task Name" id="formNameLoad" type="text"></f7-input>
+            </f7-list-item>
+             <f7-list-item>
+             <f7-label>Description</f7-label>
+             <f7-input type="textarea" name="taskDescription"  id="formDesLOad" placeholder="Task Name"></f7-input>
+             </f7-list-item>
+          </f7-list>
       </f7-block>
-      <f7-block strong>
-        <f7-link @click="$f7router.back()">Save</f7-link>
+      <f7-block strong id="taskEditOptions">
+        <f7-row>
+            <f7-col width="50">
+        <f7-link @click="$f7router.back()" v-on:click.native="loade">Save</f7-link>
+       </f7-col ><f7-col width="50">
+        <f7-link @click="$f7router.back()">Cancel</f7-link>
+      </f7-col>
+       </f7-row>
       </f7-block>
     </f7-page>
   </template>
@@ -334,7 +335,7 @@
   <!-- Page Not Found Template -->
   <template id="page-not-found">
     <f7-page>
-      <f7-navbar title="Not found" back-link="Back"></f7-navbar>
+      <f7-navbar title="Not found"   back-link="Back"></f7-navbar>
       <f7-block strong>
         <p>Sorry</p>
         <p>Requested content not found.</p>

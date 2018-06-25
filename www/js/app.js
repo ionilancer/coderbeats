@@ -17,12 +17,30 @@ Vue.component('page-form', {
 Vue.component('page-dynamic-routing', {
   template: '#page-dynamic-routing',
    mounted(){
-  
-   
-    $("#actualTasknav .title").text(elementSel.title);
+ 
+let counter =   this.setEl(5.01);
 
-console.log(elementSel);
-  }
+counter.then( (msg) => {
+ $("#actualTasknav .title").text(elementSel.title);
+ $(".taskCont #formNameLoad").attr('value', elementSel.title);
+ $(".taskCont #formDesLOad").attr('value', elementSel.desc.toString());
+ $(".taskCont #formDesLOad").text(elementSel.desc.toString());
+});
+  },
+  methods: {
+    setEl(i) {
+        return promise = new Promise( (resolve, reject) => {
+          console.log(i--);
+          if (i > 0) {
+          setTimeout( () => {
+          this.setEl(i).then(resolve);
+          }, 250);
+          } else {
+          resolve('counter finished:');
+          }
+          });
+        },
+          },
 });
 Vue.component('page-not-found', {
   template: '#page-not-found'
@@ -65,8 +83,8 @@ new Vue({
   }
 });
 
-function getForm(){
-
+function loade(){
+alert("sdf");
 }
 
 function deleteTask(){
@@ -134,6 +152,13 @@ repeat ="no"
 
    });
 }
+
+
+
+
+
+
+
 
 
   changeDate   =function(){
@@ -255,8 +280,6 @@ renderItem:function(list, fragment){
                               '<div class="item-title">{{title}}</div>' +
                             '</div>' +
                             '<div class="item-subtitle">{{hour}}</div>' +
-                            '<div class="item-desc">{{desc}}</div>' +
-
                           '</div>' +
                         '</a>' +
                       '</li><style></style>',
@@ -335,7 +358,6 @@ renderItem:function(list, fragment){
                                       } else {
                                         resolve('counter finished:');
                                       }
-
                                     });
                                   }
 

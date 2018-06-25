@@ -15,3 +15,5 @@ margin-left: 10px;
 }
 .taskNotFound{list-style: none;}
 .searchbar-no-found{display: none;}
+#taskEditOptions .col-50 {
+    text-align: center;}
