@@ -17,14 +17,20 @@ Vue.component('page-form', {
 Vue.component('page-dynamic-routing', {
   template: '#page-dynamic-routing',
    mounted(){
- 
-let counter =   this.setEl(5.01);
-
+   
+ let counter=null;
+counter =   this.setEl(3);
+$(".taskCont #formNameLoad").prop('disabled', true);
+$(".taskCont #formDesLOad").prop('disabled', true);
 counter.then( (msg) => {
+
  $("#actualTasknav .title").text(elementSel.title);
  $(".taskCont #formNameLoad").attr('value', elementSel.title);
  $(".taskCont #formDesLOad").attr('value', elementSel.desc.toString());
  $(".taskCont #formDesLOad").text(elementSel.desc.toString());
+  $(".taskCont #formNameLoad").prop('disabled', false);
+$(".taskCont #formDesLOad").prop('disabled', false);
+
 });
   },
   methods: {
@@ -40,7 +46,7 @@ counter.then( (msg) => {
           }
           });
         },
-          },
+    },
 });
 Vue.component('page-not-found', {
   template: '#page-not-found'
@@ -84,7 +90,7 @@ new Vue({
 });
 
 function loade(){
-alert("sdf");
+
 }
 
 function deleteTask(){
@@ -123,29 +129,55 @@ var x = document.getElementById("taskSettings");
 }
 
 function deleteTask(){
-  alert("fad");
+     db.transaction(function(tx) {
+            var sqlDelete =' DELETE FROM task WHERE ID = '+elementSel.id+';';
+            //execute query and load index
+          tx.executeSql(sqlDelete, [], function(tx, res){
+            var selectTask ='SELECT * FROM task WHERE (fullDate == "'+ appDate+'" ) OR (repeat=="si")';
+            //execute query and load index
+            executQuery(tx,selectTask,loadIndex);
+            });
 
+  
+});
 
-}
+   }
+function updateTask(){
+  
+     db.transaction(function(tx) {
+            var sqlDelete =' UPDATE task SET title = "'+$$('#formNameLoad').val()+'" , data = "'+$$('#formDesLOad').val()+'" WHERE ID = '+elementSel.id+';';
+         
+            //execute query and load index
+          tx.executeSql(sqlDelete, [], function(tx, res){
+            var selectTask ='SELECT * FROM task WHERE (fullDate == "'+ appDate+'" ) OR (repeat=="si")';
+            //execute query and load index
+            executQuery(tx,selectTask,loadIndex);
+            });
 
+  
+});
+
+   }
 
 
 
 
 
 saveTask = function(){
-  var x = document.getElementById("taskSettings");
-    x.style.display = "none";
+
     appDate =  $$('#datePic').val();
     taskName =  $$('#formName').val();
     taskDes =  $$('#formDes').val();
-repeat ="no"
+    repeat = $('#formRepeat').find('input').is(':checked') == true ? "si": "no"
+    console.log(repeat);
+    $$('#formDes').val("");
+    $$('#formName').val("");
    db.transaction(function(tx) {
             var sqlInsert ='INSERT INTO task (title, data, task_date, fullDate, year, month, day, hour, repeat) VALUES ';
-            sqlInsert+=' ( "'+taskName+'","'+taskDes+'", "'+today+'","'+appDate+'", "'+year+'","'+month+'","'+day+'","sda","no") ';
+            sqlInsert+=' ( "'+taskName+'","'+taskDes+'", "'+today+'","'+appDate+'", "'+year+'","'+month+'","'+day+'","sda","'+repeat+'") ';
             //execute query and load index
           tx.executeSql(sqlInsert, [], function(tx, res){
-            var selectTask ='SELECT * FROM task WHERE fullDate == "'+ appDate+'";';
+            var selectTask ='SELECT * FROM task WHERE (fullDate == "'+ appDate+'" ) OR (repeat=="si")';
             //execute query and load index
             executQuery(tx,selectTask,loadIndex);
             });
@@ -154,13 +186,20 @@ repeat ="no"
 }
 
 
+
+
+
+
+
+
+
   changeDate   =function(){
                 var date = $$('#datePic').val();  
                 $$('.virtual-list').html("<img class='loading' src='img/loading.gif'/>");
                 db.transaction(function(tx) {
                          //insert alert()data
 
-            var selectTask ='SELECT * FROM task WHERE fullDate == "'+ date+'";';
+            var selectTask ='SELECT * FROM task WHERE (fullDate == "'+ date+'" ) OR (repeat=="si")';
             //execute query and load index
             executQuery(tx,selectTask,loadIndex);
           });
@@ -183,14 +222,19 @@ repeat ="no"
 
 
 
-function clickTip(el){
+function clickTask(el){
 
 elementSel=[];
+
 var element = Object.keys(tasks).map(function(key, index) {
-  elementSel=tasks[index].id == el.id  ?tasks[index] :  null;
+
+  if(tasks[index].id == el.id){
+     elementSel=  tasks[index];
+  }
+  
 });
 
-console.log(Vue.component('page-dynamic-routing'));
+
 }
 
 
@@ -221,11 +265,13 @@ function loadIndex(tx,res)
             {           
               if(res.rows.length >0){ $$('.virtual-list').html("<img class='loading' src='img/loading.gif'/>");}else{$$('.loading').remove();template ='<li class="taskNotFound"><div class="item-inner"><div class="item-title-row"><div class="item-title">Tasks not found</div></div></li>';
                       $$('.virtual-list').html(template);}
+                      
                 //retrieve data
             var items = [];
             tasks=[];
                     for(var iii = 0; iii < res.rows.length; iii++)
                     {
+                      console.log(res.rows);
                       var tdate = new Date(res.rows.item(iii).task_date);
                       var tday=res.rows.item(iii).day;
                       tasks.push({
@@ -266,15 +312,13 @@ renderItem:function(list, fragment){
                     // List item Template7 template
                     itemTemplate:
                       '<li>' +
-                        '<a href="{{link}}" onclick="clickTip(this);" id="{{id}}" class="item-link item-content">' +
+                        '<a href="{{link}}" onclick="clickTask(this);" id="{{id}}" class="item-link item-content">' +
                           '<div class="item-inner">' +
 
                             '<div class="item-title-row">' +
                               '<div class="item-title">{{title}}</div>' +
                             '</div>' +
                             '<div class="item-subtitle">{{hour}}</div>' +
-                            '<div class="item-desc">{{desc}}</div>' +
-
                           '</div>' +
                         '</a>' +
                       '</li><style></style>',
@@ -406,7 +450,7 @@ function onDeviceReady()
         {
             //insert alert()data
 
-            var selectTask ='SELECT * FROM task WHERE fullDate == "'+ appDate+'";';
+            var selectTask ='SELECT * FROM task WHERE (fullDate == "'+ appDate+'" ) OR (repeat=="si")';
             //execute query and load index
             executQuery(tx,selectTask,loadIndex);
             

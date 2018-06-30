@@ -37,7 +37,6 @@
           <f7-navbar title="Menu"></f7-navbar>
           <f7-list>
             <f7-list-item link="/about/" title="About"></f7-list-item>
-            <f7-list-item link="/form/" title="Form"></f7-list-item>
           </f7-list>
         </f7-page>
       </f7-view>
@@ -113,6 +112,9 @@
              <f7-label>Description</f7-label>
              <f7-input type="textarea" name="taskDescription"  id="formDes" placeholder="Task Name"></f7-input>
              </f7-list-item>
+            <f7-list-item title="Repeat">
+              <f7-toggle id ="formRepeat" slot="after"></f7-toggle>
+            </f7-list-item>
           </f7-list>
           <f7-row>
             <f7-col width="50">
@@ -122,14 +124,6 @@
               <f7-link  class="button" popup-close>Cancel</f7-link>
             </f7-col>
           </f7-row>
-       <f7-block  >
-        <f7-link   v-on:click.native="taskSettings" class="button settingsLInk" >Settings</f7-link>
-        <f7-list id="taskSettings" >
-          <f7-list-item link="/dynamic-route/blog/45/post/125/?foo=bar#about" title="tip1"></f7-list-item>
-          <f7-list-item link="/load-something-that-doesnt-exist/" title="tip2"></f7-list-item>
-        </f7-list>
-
-      </f7-block>
         </f7-page>
       </f7-view>
     </f7-popup>
@@ -306,8 +300,7 @@
   <!-- Dynamic Routing Page Template -->
   <template id="page-dynamic-routing">
     <f7-page>
-      <f7-navbar title="{{elementSel.title}}" back-link="Back" id="actualTasknav"><f7-link @click="deleteTask()"  class="button" back-link="Back">Delete</f7-link></f7-navbar>
-       <f7-link   class="button tip" >Save</f7-link>
+      <f7-navbar title="title" back-link="Back" id="actualTasknav"><f7-link @click="$f7router.back()"   v-on:click.native="deleteTask" class="button">Delete</f7-link></f7-navbar>
         <f7-block strong class="taskCont">
                   <f7-list>
             <f7-list-item>    
@@ -323,7 +316,7 @@
       <f7-block strong id="taskEditOptions">
         <f7-row>
             <f7-col width="50">
-        <f7-link @click="$f7router.back()" v-on:click.native="loade">Save</f7-link>
+        <f7-link @click="$f7router.back()" v-on:click.native="updateTask">Save</f7-link>
        </f7-col ><f7-col width="50">
         <f7-link @click="$f7router.back()">Cancel</f7-link>
       </f7-col>
